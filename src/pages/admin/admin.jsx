@@ -14,26 +14,21 @@ import Line from '../charts/line'
 import Pie from '../charts/pie'
 
 const { Footer, Sider, Content } = Layout;
-const headerStyle = {
-  textAlign: 'center',
-  color: '#fff',
-  height: 64,
-  paddingInline: 48,
-  lineHeight: '64px',
-  backgroundColor: '#4096ff',
-};
+// const headerStyle = {
+//   textAlign: 'center',
+//   color: '#fff',
+//   height: 64,
+//   paddingInline: 48,
+//   lineHeight: '64px',
+//   backgroundColor: '#4096ff',
+// };
 const contentStyle = {
   textAlign: 'center',
   minHeight: 120,
   lineHeight: '120px',
   color: '#fff',
   backgroundColor: '#0958d9',
-};
-const siderStyle = {
-  textAlign: 'center',
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#001529',
+  margin: 20,
 };
 const footerStyle = {
   textAlign: 'center',
@@ -58,9 +53,9 @@ export default class Admin extends Component {
     }
     return (
       <Layout style={layoutStyle}>
-      <LeftNav style={siderStyle}/>
+      <LeftNav /> 
       <Layout>
-        <Header style={headerStyle}>Header</Header>
+        <Header>Header</Header>
         <Content style={contentStyle}>
           <Routes>
             <Route path='/home' element={<Home/>}></Route>
