@@ -46,3 +46,12 @@ export const reqWeather = (city) => {
         
 
 }
+
+//获取一级/二级分类列表
+export const reqCategoryList = (parentId) => ajax('/manage/category/list', {parentId})
+
+//添加分类(传参为两个数据)
+export const reqAddCategory = (categoryName, parentId) => ajax('/manage/category/add', {categoryName, parentId}, 'POST')
+
+//添加分类(传参为一个对象类型的数据)
+export const reqEditCategory = ({categoryId, categoryName}) => ajax('/manage/category/update', {categoryId, categoryName}, 'POST')

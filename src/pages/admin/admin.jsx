@@ -13,21 +13,9 @@ import Bar from '../charts/bar'
 import Line from '../charts/line'
 import Pie from '../charts/pie'
 
-const { Footer, Sider, Content } = Layout;
-// const headerStyle = {
-//   textAlign: 'center',
-//   color: '#fff',
-//   height: 64,
-//   paddingInline: 48,
-//   lineHeight: '64px',
-//   backgroundColor: '#4096ff',
-// };
+const { Footer, Content } = Layout;
 const contentStyle = {
-  textAlign: 'center',
   minHeight: 120,
-  lineHeight: '120px',
-  color: '#fff',
-  backgroundColor: '#0958d9',
   margin: 20,
 };
 const footerStyle = {
@@ -49,7 +37,7 @@ export default class Admin extends Component {
     const user = memoryUtils.user;
     if(!user || !user._id){
       //未登录，自动跳转到登录
-      return <Navigate to='/' />
+      return <Navigate to='/login' />
     }
     return (
       <Layout style={layoutStyle}>

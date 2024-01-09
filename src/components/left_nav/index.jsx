@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { useLocation, Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -36,6 +36,7 @@ class LeftNav extends Component {
       }
     })
   }
+  //调整菜单宽度，分为展开和缩起
   toggleCollapsed = (iscollapsed) => {
     const newWidth = iscollapsed ? 250 : 80;
     this.setState({collapsed: !this.state.collapsed, width: newWidth});
@@ -49,7 +50,7 @@ class LeftNav extends Component {
         collapsed = {collapsed}
         width = {this.state.width}
       >
-        <Link to='/' className='left_nav_header'>
+        <div className='left_nav_header'>
           <Button
             type="primary"
             onClick={() => this.toggleCollapsed(collapsed)}
@@ -57,7 +58,7 @@ class LeftNav extends Component {
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           {collapsed ? null : <h1>React Client</h1>}
-        </Link>
+        </div>
         <Menu
           selectedKeys={[path]}
           defaultOpenKeys={this.state.openKey}

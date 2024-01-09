@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+
 import './index.css'
 import { formatDate } from '../../utils/dateUtils'
 import memoryUtils from '../../utils/memoryUtils'
+import storageUtils from '../../utils/storageUtils';
 import { reqWeather } from '../../api'
 import items from '../../config/menuConfig'
+import LinkButton from '../link-button';
 
-export const withLocation = (Component) => {
-  return (props) => <Component {...props} location={useLocation()} />;
+export const withLocationandNavigate = (Component) => {
+  return (props) => <Component {...props} location={useLocation()} navigate = {useNavigate()}/>;
 }
 
 class Header extends Component {
@@ -18,7 +23,7 @@ class Header extends Component {
   }
 
   getTime = () => {
-    setInterval(()=>{
+    this.intervalId = setInterval(()=>{
       const currentTime = formatDate(Date.now())
       this.setState({currentTime})
     },1000)
@@ -50,11 +55,34 @@ class Header extends Component {
     return  title
   }
 
+  logout = () =>{
+    Modal.confirm({
+      title: 'Do you want to exit?',
+      icon: <ExclamationCircleFilled />,
+      content: 'This will delete your login information',
+      okType: 'default',
+      onOk: () => {  //用箭头函数是因为箭头函数的this能指向组件
+        //删除user数据
+        memoryUtils.user = {} 
+        storageUtils.removeUser()
+        //跳转到login
+        this.props.navigate('/login',{replace:true});
+      },
+      onCancel() {
+      },
+    });
+  }
+
   //第一次render后执行一次，一般在此执行异步操作：ajax或启动定时器
   componentDidMount () { 
     //获取当前时间
     this.getTime()
-    this.getWeather()
+    // this.getWeather()
+  }
+
+  //在组件卸载前停止计时器等
+  componentWillUnmount () {
+    clearInterval(this.intervalId)
   }
 
   render() {
@@ -65,7 +93,7 @@ class Header extends Component {
       <div className='header'>
         <div className='header-top'>
           <span>Welcome, {username}</span>
-          <a href="javascript:">Exit</a>
+          <LinkButton onClick={this.logout}>Exit</LinkButton>
         </div>
         <div className='header-bottom'>
           <div className='header-bottom-left'>
@@ -82,4 +110,4 @@ class Header extends Component {
   }
 }
 
-export default withLocation(Header);
+export default withLocationandNavigate(Header);
