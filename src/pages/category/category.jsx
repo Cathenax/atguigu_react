@@ -54,10 +54,12 @@ export default class Category extends Component {
     ];
   }
   //异步获取一级或二级分类列表
-  getCategoryList = async() => {
+  //parentId: 如果没有指定就根据状态中的parentId请求，如果指定了就根据指定的请求
+  getCategoryList = async(parentId) => {
     //在发请求前显示loading
     this.setState({loading: true})
-    const { parentId } = this.state
+    // const { parentId } = this.state
+    parentId = parentId || this.state.parentId
     const result =  await reqCategoryList(parentId)
     //请求结束，隐藏loading
     this.setState({loading: false})
@@ -66,7 +68,7 @@ export default class Category extends Component {
       const categoryList = result.data
       if(parentId === '0'){
         this.setState({ 
-        categoryList
+          categoryList
         })
       }else{
         this.setState({ 
@@ -111,33 +113,70 @@ export default class Category extends Component {
   }
   //响应点击取消：隐藏确定框
   handleCancel = () => {
-    //清除输入数据
-    this.formRef.current.resetFields()
+    //清除Modal的输入数据
+    if(this.editFormRef){
+      this.editFormRef.current.resetFields()
+    }
+    if(this.addFormRef){
+      this.addFormRef.current.resetFields()
+    }
     this.setState({showStatus:0})
   }
   //添加分类
   addCategory = () => {
-    console.log('addCategory()')
-    this.setState({showStatus:0})
+    //表单验证，通过了才处理
+    this.addFormRef.current.validateFields()
+    .then(async(values) => {
+      //隐藏确定框
+      this.setState({showStatus:0})
+      //准备数据
+      const {parentId, categoryName} = values
+      console.log('addCategory()', parentId, categoryName)
+      //清除输入数据
+      this.addFormRef.current.resetFields()
+      //发请求更新分类
+      const result = await reqAddCategory(categoryName,parentId)
+      if(result.status === 0){
+        //当前界面正是添加了新的分类的界面
+        if(parentId === this.state.parentId){
+          //重新显示当前列表
+          this.getCategoryList()
+        }
+        //在二级分类界面中添加新的一级分类，需要重新获取一级分类列表，但不需要显示一级列表
+        else if(parentId === '0'){
+          this.getCategoryList('0')
+        }
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
+    
   }
   //更新分类
-  editCategory = async () => {
-    console.log('editCategory()')
-    //隐藏确定框
-    this.setState({showStatus:0})
-    //准备数据
-    const categoryId = this.category._id
-    const categoryName = this.formRef.current.getFieldValue('categoryName')
-    console.log(categoryId, categoryName)
-    //清除输入数据
-    this.formRef.current.resetFields()
-    //发请求更新分类
-    const result = await reqEditCategory({categoryId, categoryName})
-    if(result.status === 0){
-      //重新显示列表
-      this.getCategoryList()
-    }
-    
+  editCategory = () => {
+    //表单验证，通过了才处理
+    this.editFormRef.current.validateFields()
+    .then(async(values) => {
+      //success
+      //隐藏确定框
+      this.setState({showStatus:0})
+      //准备数据
+      const categoryId = this.category._id
+      const {categoryName} = values
+      console.log('editCategory()', categoryId, categoryName)
+      //清除输入数据
+      this.editFormRef.current.resetFields()
+      //发请求更新分类
+      const result = await reqEditCategory({categoryId, categoryName})
+      if(result.status === 0){
+        //重新显示列表
+        this.getCategoryList()
+      }
+    })
+    .catch(err => {
+      console.log(err)
+    })
   }
   //发异步ajax请求
   componentDidMount() {
@@ -150,9 +189,9 @@ export default class Category extends Component {
     const {loading, categoryList, subCategoryList, parentId, parentName, showStatus} = this.state
     let category 
     category = this.category || {}
-    const title = parentId === '0'? 'Category List' : (
+    const title = parentId === '0'? 'Primary Category List' : (
       <span>
-        <LinkButton onClick={this.showCategoryList}>Category List</LinkButton>
+        <LinkButton onClick={this.showCategoryList}>Primary Category List</LinkButton>
         <ArrowRightOutlined style={{marginRight:10}}/>
         <span>{parentName}</span>
       </span>)
@@ -181,12 +220,16 @@ export default class Category extends Component {
             loading={loading}
           />
           <Modal title="Add Category" open={showStatus === 1 ? true:false} onOk={this.addCategory} onCancel={this.handleCancel}>
-            <AddForm></AddForm>
+            <AddForm
+              categoryList={categoryList}
+              parentId={parentId}
+              getForm={(formRef) => {this.addFormRef = formRef}}
+            ></AddForm>
           </Modal>
           <Modal title="Edit Category" open={showStatus === 2 ? true:false} onOk={this.editCategory} onCancel={this.handleCancel}>
             <EditForm 
               categoryName={category.name} 
-              getForm={(formRef) => {this.formRef = formRef}}
+              getForm={(formRef) => {this.editFormRef = formRef}}
             ></EditForm>
           </Modal>
         </Card>

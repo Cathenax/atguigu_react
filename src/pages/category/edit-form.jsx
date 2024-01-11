@@ -36,7 +36,14 @@ export default class EditForm extends Component {
         let {categoryName} = this.state
         return (
             <Form ref={this.formRef}>
-                <Item name='categoryName' initialValue={categoryName}>
+                <Item 
+                    name='categoryName' 
+                    initialValue={categoryName}
+                    rules={[
+                        {required: true, message: 'Please input category name!'}
+                
+                    ]}
+                >
                     <Input 
                         onChange={this.handleInputChange}
                         placeholder='Name of the Category'
