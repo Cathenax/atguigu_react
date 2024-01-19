@@ -15,7 +15,6 @@ import Pie from '../charts/pie'
 
 const { Footer, Content } = Layout;
 const contentStyle = {
-  minHeight: 120,
   margin: 20,
 };
 const footerStyle = {
@@ -48,7 +47,7 @@ export default class Admin extends Component {
           <Routes>
             <Route path='/home' element={<Home/>}></Route>
             <Route path='/category' element={<Category/>}></Route>
-            <Route path='/product' element={<Product/>}></Route>
+            <Route path='/product/*' element={<Product/>}></Route>
             <Route path='/role' element={<Role/>}></Route>
             <Route path='/user' element={<User/>}></Route>
             <Route path='/charts/bar' element={<Bar/>}></Route>

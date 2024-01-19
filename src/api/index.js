@@ -55,3 +55,20 @@ export const reqAddCategory = (categoryName, parentId) => ajax('/manage/category
 
 //添加分类(传参为一个对象类型的数据)
 export const reqEditCategory = ({categoryId, categoryName}) => ajax('/manage/category/update', {categoryId, categoryName}, 'POST')
+
+//获取商品分页列表
+export const reqProducts = (pageNum, pageSize) => ajax('/manage/product/list', {pageNum, pageSize})
+
+//搜索商品分页列表（根据产品名称/描述）
+//searchType：搜索的类型，值为productName/productDesc
+export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) => ajax('/manage/product/search',{
+        pageNum, 
+        pageSize, 
+        [searchType]:searchName,
+})
+
+//获取一个分类
+export const reqCategory = (categoryId) => ajax('/manage/category/info', {categoryId})
+
+//更新商品状态
+export const reqUpdateStatus = (productId, status) => ajax('/manage/product/updateStatus', {productId, status}, 'POST')
