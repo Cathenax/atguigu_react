@@ -148,6 +148,7 @@ export default class Category extends Component {
         }
       }
     })
+    //出错处理
     .catch(err => {
       console.log(err)
     })

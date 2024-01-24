@@ -27,7 +27,7 @@ const layoutStyle = {
   overflow: 'hidden',
   width: '100%',
   maxWidth: '100%',
-  height: '100%',
+  minHeight: '100%',
 };
 // 管理的路由组件
 export default class Admin extends Component {

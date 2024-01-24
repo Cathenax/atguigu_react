@@ -27,10 +27,10 @@ class LeftNav extends Component {
       if(item.children){
         //使用find函数寻找
         const openKey = item.children.find(element => {
-          return element.key === path;
+          return path.indexOf(element.key) === 0;
         })
         //子菜单中某项的key与当前path一致
-        if(openKey != undefined){
+        if(openKey !== undefined){
           this.state.openKey = [item.key];
         }
       }
@@ -44,7 +44,11 @@ class LeftNav extends Component {
   render() {
     const collapsed = this.state.collapsed;
     //当前请求路由路径
-    const path = this.props.location.pathname;
+    let path = this.props.location.pathname;
+    //单独处理商品/detail界面导致不匹配选中path的问题
+    if(path.indexOf('/product') === 0){//当前请求的是商品或其子路由界面
+      path = '/product'
+    }
     return (
       <Sider className='left_nav' 
         collapsed = {collapsed}

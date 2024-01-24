@@ -90,7 +90,7 @@ class ProductHome extends Component {
         render: (product) => (
           <span>
            <LinkButton onClick={() => {this.props.navigate('/product/detail', { state: {product} })}}>Details</LinkButton>
-           <LinkButton>Edit</LinkButton>
+           <LinkButton onClick={() => {this.props.navigate('/product/addupdate',{ state: product })}}>Edit</LinkButton>
           </span>
         )
       },
@@ -140,9 +140,9 @@ class ProductHome extends Component {
       </span>
     )
     const extra = (
-      <Button type='primary'>
+      <Button type='primary' onClick={() => {this.props.navigate('/product/addupdate')}}>
         <PlusOutlined/>
-        Add Products
+        Add Product
       </Button>
     )
 
