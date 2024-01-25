@@ -75,3 +75,8 @@ export const reqUpdateStatus = (productId, status) => ajax('/manage/product/upda
 
 //删除商品的图片
 export const reqDeleteImg = (name) => ajax('/manage/img/delete', {name}, 'POST')
+
+//添加或者修改商品
+export const reqAddOrUpdateProduct = (product) => ajax(
+        '/manage/product/' + (product._id ? 'update':'add'),
+        product, 'POST')

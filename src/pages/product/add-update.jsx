@@ -5,6 +5,7 @@ import {
   Input,
   Cascader,
   Button,
+  message,
 } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
 import {
@@ -13,7 +14,7 @@ import {
 
 import PictureWall from './picture-wall'
 import LinkButton from '../../components/link-button'
-import { reqCategoryList } from '../../api'
+import { reqCategoryList, reqAddOrUpdateProduct } from '../../api'
 import RichTextEditor from './rich-text-editor'
 
 
@@ -46,12 +47,34 @@ class ProductAddUpdate extends Component {
   submit = () =>{
     //进行表单验证，通过了才发送请求
     this.formRef.current.validateFields()
-    .then((values) =>{
-      //获取照片墙的所有照片名字
+    .then( async (values) =>{
+      //收集数据，并封装成product对象
+      const {name, desc, price, categoryIdList} = values
+      let pCategoryId, categoryId
+      if(categoryIdList.length === 1){
+        pCategoryId = '0'
+        categoryId = categoryIdList[0]
+      }
+      else{
+        pCategoryId = categoryIdList[0]
+        categoryId = categoryIdList[1]
+      }
       const imgs = this.picWallRef.current.getImages()
       const detail = this.richTextRef.current.getDetail()
-      console.log('sumbit',values , detail)
-      alert('发送ajax请求')
+      const product = {name, desc, price, pCategoryId, categoryId, imgs, detail}
+      //如果是更新，需要_id属性
+      if(this.isUpdate){
+        product._id = this.product._id
+      }
+      //调用接口请求函数去添加或者更新
+      const result = await reqAddOrUpdateProduct(product)
+      //根据结果提示
+      if(result.status===0){
+        message.success(`${this.isUpdate ? 'Update' : 'Add'} product successfully!`)
+        this.props.navigate(-1)
+      }else{
+        message.error(`${this.isUpdate ? 'Update' : 'Add'} product failed!`)
+      }
     })
     //出错处理
     .catch(err => {
