@@ -44,7 +44,7 @@ class Header extends Component {
       //查找子item
       else if(item.children){
         const cItem = item.children.find(curItem => {
-          return curItem.key === path
+          return path.indexOf(curItem.key)===0
         })
         //有值说明找到了
         if(cItem) {
@@ -77,6 +77,7 @@ class Header extends Component {
   componentDidMount () { 
     //获取当前时间
     this.getTime()
+    //获取当前天气
     // this.getWeather()
   }
 

@@ -61,7 +61,7 @@ class LeftNav extends Component {
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
-          {collapsed ? null : <h1>React Client</h1>}
+          {collapsed ? null : <h1>Management</h1>}
         </div>
         <Menu
           selectedKeys={[path]}

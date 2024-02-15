@@ -71,12 +71,27 @@ export const reqSearchProducts = ({pageNum, pageSize, searchName, searchType}) =
 export const reqCategory = (categoryId) => ajax('/manage/category/info', {categoryId})
 
 //更新商品状态
+//update the status of a product
 export const reqUpdateStatus = (productId, status) => ajax('/manage/product/updateStatus', {productId, status}, 'POST')
 
 //删除商品的图片
+//delete the image of a product
 export const reqDeleteImg = (name) => ajax('/manage/img/delete', {name}, 'POST')
 
 //添加或者修改商品
+//add or update products
 export const reqAddOrUpdateProduct = (product) => ajax(
         '/manage/product/' + (product._id ? 'update':'add'),
         product, 'POST')
+
+//获取所有角色的列表
+//get the list of all roles
+export const reqRoles = () => ajax('/manage/role/list')
+
+//添加角色
+//add a new role
+export const reqAddRole = (roleName) => ajax('/manage/role/add', {roleName}, 'POST')
+
+//更新角色
+//update a role
+export const reqUpdateRole = (role) => ajax('/manage/role/update', role, 'POST')
